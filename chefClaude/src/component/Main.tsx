@@ -1,14 +1,21 @@
+import React from 'react'
 export default function Main() {
-  const ingredients:string [] = [];
+  const [ingredients, setIngredients] = React.useState<string[]>([]);
 
   const ingredientsListItem = ingredients.map(ingredient => (
-    <li>{ingredient}</li>
+    <li key={ingredient}>{ingredient}</li>
   ))
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    console.log("Form submitted!");
+    const formData = new FormData(e.currentTarget);
+    const newIngredient = formData.get("ingredient")
+
+    if(typeof newIngredient === "string" && newIngredient.trim() !== "") {
+      setIngredients(prevIngredients => [...prevIngredients, newIngredient])
+    }
   }
+
   return (
     <main >
       <form action="" className="flex justify-center mt-60 border-gray-600 gap-2" onSubmit={handleSubmit}>
@@ -22,7 +29,9 @@ export default function Main() {
 
         <button className="text-amber-50 bg-black h-10 rounded-lg p-2">+ Add ingredient</button>
       </form>
-      <ul>{ingredientsListItem}</ul>
+      <div>
+        <ul>{ingredientsListItem}</ul>
+      </div>
     </main>
   )
 }
